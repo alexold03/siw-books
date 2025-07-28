@@ -24,7 +24,7 @@ public class LibroValidator implements Validator {
             boolean exists = this.libroService.existsByTitoloAndAnnoPubblicazione(
                     libro.getTitolo(), libro.getAnnoPubblicazione());
 
-            // Solo se è un libro nuovo (non ha ID)
+           
             if (exists && libro.getId() == null) {
                 errors.rejectValue("titolo", "libro.duplicate", "Questo libro esiste già!");
             }

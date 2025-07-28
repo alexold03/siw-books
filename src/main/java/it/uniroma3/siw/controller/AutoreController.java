@@ -67,7 +67,7 @@ public class AutoreController {
 	private String salvaAutore(@Valid@ModelAttribute Autore autore,BindingResult bindingResult, @RequestParam("file") MultipartFile file) throws IOException  {
 
 		if (bindingResult.hasErrors()) {
-			return "admin/formAutore"; // torna al form mostrando gli errori
+			return "admin/formAutore";
 		}
 		if (!file.isEmpty()) {
 			autore.setFotografia(file.getBytes());
@@ -97,7 +97,7 @@ public class AutoreController {
 			return "redirect:/autori";
 		}
 		model.addAttribute("autore", autore);
-		return "admin/formImmagineAutore"; // dovrai creare questa pagina
+		return "admin/formImmagineAutore"; 
 	}
 
 

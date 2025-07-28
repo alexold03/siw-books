@@ -61,11 +61,11 @@ public class AuthConfiguration {
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error=true")
                 )
-                // LOGOUT: qui definiamo il logout
+                
                 .logout(logout -> logout
-                        // il logout è attivato con una richiesta GET a "/logout"
+                        
                         .logoutUrl("/logout")
-                        // in caso di successo, si viene reindirizzati alla home
+                        
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")

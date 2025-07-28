@@ -40,12 +40,12 @@ public class AutoreService {
 		Autore autore = autoreRepository.findById(id).orElse(null);
 	    
 	    if (autore != null) {
-	        // Rimuove l'autore dalla lista autori di ciascun libro
+	       
 	        for (Libro libro : autore.getLibri()) {
 	            libro.getAutori().remove(autore);
 	        }
 	        
-	        // Pulisce la lista dei libri dell'autore (evita problemi di riferimento)
+	        
 	        autore.getLibri().clear();
 
 	        autoreRepository.delete(autore);

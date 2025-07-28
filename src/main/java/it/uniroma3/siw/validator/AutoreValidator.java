@@ -24,7 +24,7 @@ public class AutoreValidator implements Validator {
 	        boolean exists = this.autoreService.existsByNomeAndDataNascita(
 	            autore.getNome(), autore.getDataNascita());
 
-	        if (exists && autore.getId() == null) { // Nuovo autore
+	        if (exists && autore.getId() == null) { 
 	            errors.rejectValue("nome", "autore.duplicate", "Questo autore esiste già!");
 	        }
 	    }

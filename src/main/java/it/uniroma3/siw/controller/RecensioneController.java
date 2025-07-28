@@ -74,7 +74,7 @@ public class RecensioneController {
 			return "redirect:/login";
 		}
 
-		// Imposto autore e libro PRIMA della validazione per evitare errori NotNull
+		
 		recensione.setAutore(user);
 		recensione.setLibro(libro);
 		if (recensioneService.giaScritta(user, libro).isPresent()) {
@@ -85,7 +85,7 @@ public class RecensioneController {
 		if (bindingResult.hasErrors()) {
 			return "formRecensione";
 		}
-		recensione.setId(null); // sicurezza
+		recensione.setId(null); 
 		recensioneService.save(recensione);
 		return "redirect:/libro/" + idL;
 	}

@@ -89,16 +89,15 @@ public class LibroController {
 
 		return "libro.html";
 	}
-	// Mostra form upload immagine - solo ADMIN può accedere
-
+	
 	@GetMapping("admin/libri/{idLibro}/immagine")
 	public String mostraFormUpload(@PathVariable Long idLibro, Model model) {
 		Libro libro = libroService.findById(idLibro);
 		model.addAttribute("libro", libro);
-		return "admin/formImmagine"; // il nome del template HTML per il form
+		return "admin/formImmagine"; 
 	}
 
-	// Gestisce upload immagine
+	
 
 	@PostMapping("admin/libri/{idLibro}/immagine")
 	public String caricaImmagine(@PathVariable Long idLibro, 
@@ -107,7 +106,7 @@ public class LibroController {
 		try {
 			Libro libro = libroService.findById(idLibro);
 			immagineService.salvaImmaginePerLibro(libro, file);
-			return "redirect:/libro/" + idLibro; // torna al dettaglio libro
+			return "redirect:/libro/" + idLibro; 
 		} catch (Exception e) {
 			model.addAttribute("error", "Errore nel caricamento dell'immagine.");
 			return "admin/formImmagine";
@@ -145,8 +144,6 @@ public class LibroController {
 
 	    List<Autore> autoriLibro = libro.getAutori();
 	    List<Autore> tutti = autoreService.findAll();
-
-	    // Rimuovi gli autori già associati
 	    tutti.removeAll(autoriLibro);
 
 	    model.addAttribute("autoriAssociati", autoriLibro);
@@ -213,13 +210,13 @@ public class LibroController {
 	        return "admin/formLibro";
 	    }
 
-	    libro.setId(id); // Assicurati che l'ID venga preservato
+	    libro.setId(id); 
 
 	    if (!file.isEmpty()) {
 	        immagineService.salvaImmaginePerLibro(libro, file);
 	    }
 
-	    libroService.save(libro); // Funziona anche per update se usi .save()
+	    libroService.save(libro); 
 	    return "redirect:/libri";
 	}
 	

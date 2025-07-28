@@ -27,7 +27,7 @@ public class Recensione {
 
 	@Min(value = 1)
 	@Max(value = 5)
-	private int voto; // da 1 a 5
+	private int voto; 
 
 	@NotBlank
 	@Size(max = 1000)
@@ -37,7 +37,7 @@ public class Recensione {
 	private Libro libro;
 
 	@ManyToOne
-	private User autore; // recensore
+	private User autore; 
 
 	public Long getId() {
 		return id;

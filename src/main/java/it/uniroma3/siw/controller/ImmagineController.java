@@ -58,9 +58,9 @@ public class ImmagineController {
 	        img.setContenuto(file.getBytes());
 	        img.setLibro(libroOpt.get());
 	        
-	        immagineService.save(img); // salva l’immagine nel DB
+	        immagineService.save(img); 
 	        
-	        return "redirect:/libri/" + idLibro; // o altra pagina
+	        return "redirect:/libri/" + idLibro;
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	        model.addAttribute("error", "Errore caricando immagine");

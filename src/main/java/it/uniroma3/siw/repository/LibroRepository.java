@@ -23,7 +23,7 @@ public interface LibroRepository extends CrudRepository <Libro,Long> {
 	Page<Libro> findByTitoloContainingIgnoreCase(String titolo, Pageable pageable);
 
 	Page<Libro> findAll(Pageable pageable);
-
+	
 
 
 }

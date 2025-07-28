@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Biblioteca Antica - Libri</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/catalogo.css}" />
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <header>
+        <h1>
+            <i class="fas fa-book-open"></i>
+            Catalogo Libri
+        </h1>
+    </header>
+	<form th:action="@{/libri}" method="get" class="search-form">
+	    <input type="text" name="searchTitolo"
+	           th:value="${param.searchTitolo}"
+	           placeholder="Cerca per titolo..."
+	           class="search-input" />
+
+	    <button type="submit" class="search-button">
+	        <i class="fas fa-feather-alt"></i> Cerca
+	    </button>
+	</form>
+
+    <main>
+        <section class="anteprima-sezione">
+            <div class="anteprima-container">
+                <!-- Card per ogni libro -->
+                <div class="card" th:each="libro : ${libroPage.content}">
+                    <a th:href="@{'/libro/' + ${libro.id}}">
+                        <div class="card-img">
+                            <img th:if="${libro.copertina != null}" 
+                                 th:src="@{'/immagini/' + ${libro.copertina.id}}" 
+                                 alt="Copertina Libro" />
+                            <i class="fas fa-book" th:if="${libro.copertina == null}" style="font-size: 6rem; padding: 2rem;"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 th:text="${libro.titolo}">Titolo Libro</h3>
+                            <p th:text="'Anno di pubblicazione: ' + ${libro.annoPubblicazione}">Anno</p>
+							<p>
+							    <span th:each="autore, iterStat : ${libro.autori}" 
+							          th:text="${autore.nome + ' ' + autore.cognome} + (${iterStat.last} ? '' : ', ')"></span>
+							</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+			<div class="pagination-container">
+			    <div class="pagination">
+			        <!-- Precedente -->
+			        <span th:if="${libroPage.hasPrevious()}" >
+			            <a th:href="@{/libri(page=${libroPage.number - 1}, searchTitolo=${searchTitolo})}">&laquo; Precedente</a>
+			        </span>
+			        <span th:unless="${libroPage.hasPrevious()}" class="disabled">&laquo; Precedente</span>
+
+			        <!-- Numeri di pagina -->
+			        <span th:each="i : ${#numbers.sequence(0, libroPage.totalPages - 1)}">
+			            <a th:if="${i != libroPage.number}" 
+			               th:href="@{/libri(page=${i}, searchTitolo=${searchTitolo})}" 
+			               th:text="${i + 1}"></a>
+			            <span th:if="${i == libroPage.number}" class="active" th:text="${i + 1}"></span>
+			        </span>
+
+			        <!-- Successiva -->
+			        <span th:if="${libroPage.hasNext()}">
+			            <a th:href="@{/libri(page=${libroPage.number + 1}, searchTitolo=${searchTitolo})}">Successiva &raquo;</a>
+			        </span>
+			        <span th:unless="${libroPage.hasNext()}" class="disabled">Successiva &raquo;</span>
+			    </div>
+			</div>
+
+            <!-- Empty state -->
+            <div class="empty-state" th:if="${libroPage == null or libroPage.content.isEmpty()}">
+                <i class="fas fa-book-open"></i>
+                <p>Nessun libro presente nella collezione</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Biblioteca Antica</p>
+    </footer>
+</body>
+</html>

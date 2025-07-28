@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${libro.titolo}">Libro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/libro.css}">
+</head>
+<body>
+   
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container mt-4">
+        <!-- Hero Section con Copertina e Info Libro -->
+        <div class="book-hero">
+            <div class="container">
+                <div class="book-hero-content">
+                    <!-- Copertina del libro -->
+					<div class="book-cover-container">
+					    <div th:if="${libro.copertina != null}">
+					        <img th:src="@{'/immagini/' + ${libro.copertina.id}}" 
+					             th:alt="${libro.titolo}" 
+					             class="book-cover"
+					             th:classappend="${#authorization.expression('hasRole(''ADMIN'')')} ? ' cover-current' : ''" />
+					             
+					        <!-- Solo admin vede la scritta "Copertina" -->
+					        <div sec:authorize="hasRole('ADMIN')" class="cover-label">
+					            Copertina
+					        </div>
+					    </div>
+					    <div th:unless="${libro.copertina != null}" class="no-cover">
+					        <div>
+					            <i class="fas fa-book"></i>
+					            <div>Copertina non disponibile</div>
+					        </div>
+					    </div>
+					</div>
+     
+                    <!-- Informazioni del libro -->
+                    <div class="book-info">
+                        <h1 th:text="${libro.titolo}">Titolo del libro</h1>
+                        
+                        <div class="book-meta">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span th:text="${libro.annoPubblicazione}">Anno pubblicazione</span>
+                        </div>
+                        
+                        <!-- Autori -->
+                        <div class="authors-section">
+                            <h3>
+                                <i class="fas fa-user-edit"></i>
+                                Autori
+                            </h3>
+                            <div class="authors-list">
+                                <span th:each="autore : ${libro.autori}" 
+                                      th:text="${autore.nome + ' ' + autore.cognome}"
+                                      class="author-badge">
+                                    Nome Cognome
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controlli Admin -->
+        <div sec:authorize="hasRole('ADMIN')" class="admin-controls">
+            <h3>
+                <i class="fas fa-cog"></i>
+                Controlli Amministratore
+            </h3>
+            <div class="admin-buttons">
+                <a th:href="@{'/admin/libri/' + ${libro.id} + '/immagine'}" 
+                   class="btn-admin">
+                    <i class="fas fa-image"></i>
+                    Aggiungi Immagine
+                </a>
+                
+                <a th:href="@{'/admin/libri/'+ ${libro.id} +'/autori'}" 
+                   class="btn-admin">
+                    <i class="fas fa-user-edit"></i>
+                    Modifica Autori
+                </a>
+				
+				<a th:href="@{'/admin/libri/'+ ${libro.id} +'/modifica'}" 
+				                  class="btn-admin">
+				                   <i class="fas fa-user-edit"></i>
+				                   Modifica Libro
+				</a>
+                
+                <form th:action="@{'/admin/libro/' + ${libro.id} + '/elimina'}" 
+                      method="post" 
+                      style="display: inline;"
+                      th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                    <button type="submit" class="btn-danger-admin">
+                        <i class="fas fa-trash"></i>
+                        Elimina Libro
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Galleria Immagini Aggiuntive (se presenti) -->
+        <div th:if="${libro.immagini != null and libro.immagini.size() > 1}" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-images"></i>
+                Galleria Immagini
+            </h2>
+            <div class="gallery-grid">
+				<div th:each="img, iterStat : ${libro.immagini}" 
+				     th:if="${iterStat.index > 0}"
+					 th:classappend="${#authorization.expression('hasRole(''ADMIN'')') and (libro.copertina != null and img.id == libro.copertina.id)} ? ' current-cover' : ''"
+				     class="gallery-item">
+				    
+				    <img th:src="@{'/immagini/' + ${img.id}}" 
+				         th:alt="${libro.titolo + ' - Immagine ' + (iterStat.index + 1)}">
+
+				    <div sec:authorize="hasRole('ADMIN')" class="mt-2 text-center">
+				        <form th:action="@{'/admin/libri/' + ${libro.id} + '/copertina'}" method="post">
+				            <input type="hidden" name="immagineId" th:value="${img.id}" />
+							<button type="submit" class="btn-vintage-sm"
+				                    th:disabled="${libro.copertina != null and img.id == libro.copertina.id}">
+				                <i class="fas fa-bookmark"></i>
+				                <span th:text="${libro.copertina != null and img.id == libro.copertina.id} ? 'Copertina attuale' : 'Imposta come copertina'"></span>
+				            </button>
+				        </form>
+				    </div>
+				</div>
+            </div>
+        </div>
+
+        <!-- Sezione Recensioni -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i>
+                Recensioni
+            </h2>
+            
+            <div th:if="${libro.recensioni != null and !libro.recensioni.empty}">
+                <div th:each="rec : ${libro.recensioni}" class="review-card">
+                    <div class="review-header">
+                        <div class="review-author" th:text="${rec.autore.name + ' ' + rec.autore.surname}">
+                            Autore
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <span th:text="${rec.voto}">Voto</span>/5
+                        </div>
+                    </div>
+                    <h5 class="review-title" th:text="${rec.titolo}">Titolo recensione</h5>
+                    <p class="review-text" th:text="${rec.testo}">Testo recensione</p>
+					<div sec:authorize="hasRole('ADMIN')" class="text-end mt-2">
+					                <form th:action="@{'/admin/libro/' + ${libro.id} + '/recensione/' + ${rec.id} + '/cancella'}"
+					                      method="post"
+					                      style="display: inline;">
+					                    <button type="submit" class="btn-danger-admin" title="Cancella recensione">
+					                        <i class="fas fa-trash"></i> Cancella recensione
+					                    </button>
+					                </form>
+					</div>
+                </div>
+            </div>
+            
+            <div th:unless="${libro.recensioni != null and !libro.recensioni.empty}" class="no-reviews">
+                <i class="fas fa-comments"></i>
+                <p>Nessuna recensione disponibile per questo libro.</p>
+            </div>
+        </div>
+
+        <!-- Messaggio se recensione già scritta -->
+        <div th:if="${giaRecensito}" class="alert-info-custom">
+            <i class="fas fa-info-circle"></i>
+            Hai già recensito questo libro.
+        </div>
+
+        <!-- Bottoni di Azione -->
+        <div class="action-buttons">
+            <!-- Bottone per nuova recensione (solo se non già scritta) -->
+            <div th:if="${userDetails != null and !(giaRecensito ?: false)}">
+                <a th:href="@{'/libro/' + ${libro.id} + '/recensione/nuova'}" 
+                   class="btn-vintage">
+                    <i class="fas fa-plus"></i>
+                    Aggiungi una nuova recensione
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

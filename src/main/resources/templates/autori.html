@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo Autori</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/navbar.css}"/>
+		<link rel="stylesheet" th:href="@{/css/catalogo.css}" />
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <header>
+        <h1>
+            <i class="fas fa-users"></i>
+            Catalogo Autori
+        </h1>
+    </header>
+	<form th:action="@{/autori}" method="get" class="search-form">
+		    <input type="text" name="searchAutore"
+		           th:value="${param.searchAutore}"
+		           placeholder="Cerca per nome o cognome..."
+		           class="search-input" />
+
+		    <button type="submit" class="search-button">
+		        <i class="fas fa-feather-alt"></i> Cerca
+		    </button>
+		</form>
+
+    <main>
+        <section class="anteprima-sezione">
+            <div class="anteprima-container">
+                <div class="card" th:each="autore : ${autorePage.content}">
+                    <a th:href="@{'/autore/' + ${autore.id}}">
+                        <div class="card-img">
+                            <img th:src="@{/autore/foto/{id}(id=${autore.id})}" alt="Foto Autore" />
+                        </div>
+                        <div class="card-content">
+                            <h3 th:text="${autore.nome + ' ' + autore.cognome}">Nome Cognome</h3>
+                            <p th:text="${autore.nazionalita}">Nazionalità</p>
+                            <p th:text="'Nato nel ' + ${autore.dataNascita}">Anno di nascita</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+			
+			<div class="pagination-container">
+						    <div class="pagination">
+						        <!-- Precedente -->
+						        <span th:if="${autorePage.hasPrevious()}" >
+						            <a th:href="@{/autori(page=${autorePage.number - 1}, searchAutore=${searchAutore})}">&laquo; Precedente</a>
+						        </span>
+						        <span th:unless="${autorePage.hasPrevious()}" class="disabled">&laquo; Precedente</span>
+
+						        <!-- Numeri di pagina -->
+						        <span th:each="i : ${#numbers.sequence(0, autorePage.totalPages - 1)}">
+						            <a th:if="${i != autorePage.number}" 
+						               th:href="@{/autori(page=${i}, searchAutore=${searchAutore})}" 
+						               th:text="${i + 1}"></a>
+						            <span th:if="${i == autorePage.number}" class="active" th:text="${i + 1}"></span>
+						        </span>
+
+						        <!-- Successiva -->
+						        <span th:if="${autorePage.hasNext()}">
+						            <a th:href="@{/autori(page=${autorePage.number + 1}, searchAutore=${searchAutore})}">Successiva &raquo;</a>
+						        </span>
+						        <span th:unless="${autorePage.hasNext()}" class="disabled">Successiva &raquo;</span>
+						    </div>
+						</div>
+
+            
+            <!-- Empty State -->
+            <div class="empty-state" th:if="${autorePage == null or autorePage.content.isEmpty()}">
+                <i class="fas fa-user-slash"></i>
+                <p>Nessun autore presente nel catalogo</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Libreria SIW</p>
+    </footer>
+</body>
+</html>

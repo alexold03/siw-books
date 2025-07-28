@@ -1,0 +1,161 @@
+
+:root {
+    --parchment-bg: #f4f1e8;
+    --parchment-dark: #e8e2d0;
+    --old-paper: #f9f6f0;
+    --ink-dark: #2c2416;
+    --ink-medium: #4a3f2e;
+    --accent-gold: #b8860b;
+    --accent-brown: #8b4513;
+    --shadow-color: rgba(139, 69, 19, 0.1);
+}
+
+/* Navbar vintage styling */
+.navbar-vintage {
+    background: linear-gradient(135deg, var(--ink-dark) 0%, var(--ink-medium) 100%);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border-bottom: 3px solid var(--accent-gold);
+    padding: 1rem 0;
+    position: relative;
+}
+
+.navbar-vintage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23d4af37" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23d4af37" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23d4af37" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.navbar-vintage .container-fluid {
+    position: relative;
+    z-index: 1;
+}
+
+.navbar-vintage .navbar-brand {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-gold) !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-vintage .navbar-brand::before {
+    content: '📚';
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.navbar-vintage .navbar-brand:hover {
+    color: var(--parchment-bg) !important;
+    transform: scale(1.05);
+}
+
+.navbar-vintage .navbar-nav {
+    gap: 1rem;
+}
+
+.navbar-vintage .nav-link {
+    color: var(--parchment-bg) !important;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-vintage .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-brown) 100%);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.navbar-vintage .nav-link:hover::before {
+    left: 0;
+}
+
+.navbar-vintage .nav-link:hover {
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+}
+
+/* Username styling */
+.navbar-vintage .nav-link.username {
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-brown) 100%);
+    color: white !important;
+    font-weight: 600;
+    border: 2px solid var(--accent-gold);
+    cursor: default;
+}
+
+.navbar-vintage .nav-link.username:hover {
+    transform: none;
+    box-shadow: 0 2px 10px rgba(184, 134, 11, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 991px) {
+    .navbar-vintage .navbar-nav {
+        text-align: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--accent-gold);
+    }
+    
+    .navbar-vintage .nav-link {
+        margin: 0.3rem 0;
+    }
+}
+
+/* Toggle button for mobile (without JavaScript) */
+.navbar-toggler {
+    border: 2px solid var(--accent-gold);
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: transparent;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(184, 134, 11, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23b8860b' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Mobile menu styling */
+.navbar-collapse {
+    background: var(--ink-dark);
+    border-radius: 10px;
+    margin-top: 1rem;
+    padding: 1rem;
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+@media (min-width: 992px) {
+    .navbar-collapse {
+        background: transparent;
+        border-radius: 0;
+        margin-top: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+}
